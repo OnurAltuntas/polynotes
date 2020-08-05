@@ -12,7 +12,6 @@ class AddNotesScreen extends React.Component {
     }
 
    sumbitHandler = () => {
-    console.log('----------', this.state);
     this.props.addNotes(this.state.title,this.state.content);
     this.setState({
         title:'',
