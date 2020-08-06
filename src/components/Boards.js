@@ -1,106 +1,90 @@
-import React,{useState} from 'react';
-import {StyleSheet, View,Button,TouchableOpacity,Image} from 'react-native';
-import { SafeAreaView, FlatList, Text, StatusBar } from 'react-native';
-import ActionButton from 'react-native-action-button';
-import {addBoards} from '../redux/actions/index'
-import {connect} from 'react-redux'
+import React,{useState,useEffect, Component}from 'react'
+import { StyleSheet, Text, View,FlatList ,Button} from 'react-native'
+import {getBoards} from '../redux/actions/index';
+import {connect} from 'react-redux';
+import _ from 'lodash';
+import firebase from 'firebase';
 
-const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-   
-  ];
+
+class Boards  extends Component {
+ 
+  componentDidMount(){
+    var temp = 'gelir inş';
+    this.props.getBoards(temp);
+  }
+
+  signOutHandler = ({ navigation }) =>{
+    firebase.auth().signOut().then(function() {
+      navigation.navigate('Home')
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
   
-  const Item = ({ title }) => (
-    <View style={styles.item} >
-      <Text style={styles.title}>{title}</Text>
+
+  onPressHandler = ({ navigation }) => {
+    return (
+      <FlatList style={{width:'100%'}}
+        data = {this.props.boardsList}
+        keyExtractor={(item) => item.key}
+        renderItem={({item})=>{
+          var temp = item;
+          var tempKey = JSON.stringify(item.key).split('undefined').toString().replace(/['"]+/g, '').replace(',','');
+        
+          return(
+            <View style={styles.container}>
+            <Text
+            onPress={() => this.props.navigation.navigate('NotesScreen',{
+              boardId:temp.title,
+              boardKey:tempKey
+            })}
+            >{tempKey}</Text> 
+            <Text
+            
+            >{item.id}</Text> 
+            </View>
+          )
+        }}
+    
+    />
+    );
+  };
+
+render(){
+  console.log('//////////////////////',this.props.boardsList);
+  return (
+    
+    <View style={styles.container}>
+    <this.onPressHandler/>
+    
+    
     </View>
   );
-
-const Boards = () => {
-    const [id, setId] = useState('');
-    const [title, settitle] = useState('')
-    
-    const addBoardHandler = (params) => {
-        console.log("add")
-    }
-
-    const renderItem = ({ item }) => (
-        <Item title={item.title} />
-      );
-
-    
-    
-  return (
-    <View style={styles.MainContainer}>
-
-    <SafeAreaView style={styles.container}>
-    <FlatList
-      data={DATA}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-    />
-  </SafeAreaView>
-        
-       
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={addBoardHandler}
-          style={styles.TouchableOpacityStyle}>
-          <Image
-            //We are making FAB using TouchableOpacity with an image
-            //We are using online image here
-             source={{
-uri:'https://raw.githubusercontent.com/AboutReact/sampleresource/master/plus_icon.png',
-            }}
-            //You can use you project image Example below
-            //source={require('./images/float-add-icon.png')}
-            style={styles.FloatingButtonStyle}
-          />
-        </TouchableOpacity>
-      </View>
-  );
-};
-
-export default connect(null,{addBoards})(Boards) ;
+}
+}
 
 const styles = StyleSheet.create({
-    MainContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5F5F5',
-    },
-  
-    TouchableOpacityStyle: {
-      position: 'absolute',
-      width: 50,
-      height: 50,
-      alignItems: 'center',
-      justifyContent: 'center',
-      right: 30,
-      bottom: 30,
-    },
-  
-    FloatingButtonStyle: {
-      resizeMode: 'contain',
-      width: 50,
-      height: 50,
-      //backgroundColor:'black'
-    },
-    container: {
-        flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
-      },
-      item: {
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      },
-      title: {
-        fontSize: 32,
-      },
-  });
+
+  container:{
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center",
+    textAlign:"center"
+  }
+
+})
+
+function mapStateToProps(state) {
+
+  const boardsList = _.map(state.boardsList.boardsList, (val,key) => {
+    return{
+      ...val,
+      key:key
+    }
+  })
+  return{
+    boardsList
+}
+}
+
+export default connect(mapStateToProps,{getBoards})(Boards);

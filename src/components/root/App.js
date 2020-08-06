@@ -38,7 +38,7 @@ const Drawer = createDrawerNavigator();
         <Drawer.Screen name="Signin" component={Signin} />
         <Drawer.Screen name="CreateUser" component={CreateUser} />
         <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Notes" component={NotesScreen} />
+        <Drawer.Screen name="NotesScreen" component={NotesScreen} />
         <Drawer.Screen name="AddNotes" component={AddNotesScreen} />
         <Drawer.Screen name="Boards" component={Boards} />
 

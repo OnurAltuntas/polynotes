@@ -1,10 +1,10 @@
 export default function (state = {} ,action){
     switch(action.type){
-        case "BOARDS_FETCH":
-           
+        case "TODOS_FETCH":
+            
             return{
                 ...state,
-                boardsList:action.payload
+                todosList:action.payload
             }
 
             default:

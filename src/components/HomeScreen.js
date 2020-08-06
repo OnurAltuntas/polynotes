@@ -15,6 +15,10 @@ import {connect} from 'react-redux'
 
 
 class HomeScreen extends React.Component {
+  componentDidMount(){
+  console.log('vay amk')
+
+  }
     state = {
         id:"",
         title:"",
@@ -28,10 +32,13 @@ class HomeScreen extends React.Component {
         title:''
     })
     this.setState({modalVisible:!this.state.modalVisible});
+
+    
     
   };
 
   render(){
+   
     return (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
 

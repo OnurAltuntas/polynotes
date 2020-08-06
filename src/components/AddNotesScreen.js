@@ -2,10 +2,16 @@ import * as React from 'react';
 import {useState} from 'react';
 import {Button, View, Text, TextInput} from 'react-native';
 import {addNotes} from './../redux/actions/index';
-import {connect} from 'react-redux'
+import {getBoards} from './../redux/actions/index';
+import {connect,mapStateToProps} from 'react-redux'
 
 
 class AddNotesScreen extends React.Component {
+
+  componentDidMount(){
+    
+  }
+
     state = {
         title:"",
         content:""
@@ -19,6 +25,12 @@ class AddNotesScreen extends React.Component {
     })
     
   };
+
+  mapStateToProps(params) {
+    return {
+      listOfBoards:state.boardsList
+    }
+  }
 
   render(){
     return (
@@ -37,4 +49,4 @@ class AddNotesScreen extends React.Component {
   }
 };
 
-export default connect(null,{addNotes})(AddNotesScreen) ;
+export default connect(mapStateToProps,{addNotes})(AddNotesScreen) ;

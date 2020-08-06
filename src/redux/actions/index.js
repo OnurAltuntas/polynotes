@@ -1,23 +1,37 @@
 import firebase from '../../Config/FbConfig';
 
- export const getBlogs = () => {
+ export const getNotes = () => {
   return (dispatch) => {
-    firebase.database.ref('/notes').on('value', (snapshot) => {
+    firebase.database().ref('/notes').on('value', (snapshot) => {
       dispatch({
         type: 'NOTES_FETCH',
-        payload: 'done',
+        payload: snapshot.val(),
       });
     });
   };
 };
 
-export const getBoards = () => {
+export const getBoards = (temp) => {
   return (dispatch) => {
     var currentUserId = firebase.auth().currentUser.uid;
+    console.log('$$$$$$$$$$$$$'+temp);
     firebase.database().ref('/'+currentUserId+'/Boards').on('value', (snapshot) => {
       dispatch({
         type: 'BOARDS_FETCH',
-        payload: 'done',
+        payload:  snapshot.val(),
+      });
+    });
+  };
+};
+
+export const getTodos = (boardKey) => {
+  return (dispatch) => {
+    var currentUserId = firebase.auth().currentUser.uid;
+  
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo').on('value', (snapshot) => {
+      dispatch({
+        type: 'TODOS_FETCH',
+        payload:  snapshot.val(),
       });
     });
   };
@@ -36,7 +50,17 @@ export function addBoards(id,title){
     if(currentUserId===null){
       console.log("null geldi");
     }
-    firebase.database().ref('/'+currentUserId+'/Boards').push({id,title});
+    
+    var boardKey = firebase.database().ref('/'+currentUserId+'/Boards').push({id,title}).getKey();
+    console.log(JSON.stringify(boardKey));
+    var empty = '';
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo').push({empty});
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Inprogress').push({empty});
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Done').push({empty});
+   
+    
+
+    
   
   }
 }
