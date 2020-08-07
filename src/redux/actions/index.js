@@ -37,6 +37,32 @@ export const getTodos = (boardKey) => {
   };
 };
 
+export const getInProgress = (boardKey) => {
+  return (dispatch) => {
+    var currentUserId = firebase.auth().currentUser.uid;
+  
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Inprogress').on('value', (snapshot) => {
+      dispatch({
+        type: 'INPROGRESS_FETCH',
+        payload:  snapshot.val(),
+      });
+    });
+  };
+};
+
+export const getDones = (boardKey) => {
+  return (dispatch) => {
+    var currentUserId = firebase.auth().currentUser.uid;
+  
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Done').on('value', (snapshot) => {
+      dispatch({
+        type: 'DONES_FETCH',
+        payload:  snapshot.val(),
+      });
+    });
+  };
+};
+
 
 export function addNotes(title,content){
     return (dispatch) =>{

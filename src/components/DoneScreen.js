@@ -1,30 +1,31 @@
 import React, {useEffect, useState, Component} from 'react';
 import {Button, View, Text, FlatList, StyleSheet} from 'react-native';
-import {getTodos} from '../redux/actions/index';
+import {getDones} from '../redux/actions/index';
 import firebase from 'firebase';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
-class NotesScreen extends Component {
+class DoneScreen extends Component {
   componentDidMount() {
-    const {boardId} = this.props.route.params;
+
     const {boardKey} = this.props.route.params;
 
     var temp = JSON.stringify(boardKey);
 
     console.log(boardKey);
 
-    this.props.getTodos(boardKey);
+    this.props.getDones(boardKey);
   }
 
   drawHandler = ({navigation, route}) => {
+    const {boardKey} = this.props.route.params;
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Todo</Text>
+        <Text style={{fontSize:24}}>DONES PAGE Page</Text>
 
         <FlatList
           style={{width: '100%'}}
-          data={this.props.todosList}
+          data={this.props.donesList}
           keyExtractor={(item) => item.key}
           renderItem={({item}) => {
             return (
@@ -34,12 +35,19 @@ class NotesScreen extends Component {
             );
           }}
         />
+        <Button
+        title='<-- InProgress '
+        onPress={() => this.props.navigation.navigate('InProgressScreen',{
+          boardKey:boardKey
+        })}
+        />
+
       </View>
     );
   };
 
   render() {
-    console.log('---------------------', this.props.todosList);
+    console.log('---------------------', this.props.donesList);
 
     return (
       <View style={styles.container}>
@@ -59,17 +67,16 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  const todosList = _.map(state.todosList.todosList, (val, key) => {
+  const donesList = _.map(state.donesList.donesList, (val, key) => {
     return {
       ...val,
       key: key,
     };
   });
-  console.log('%%%%%%%%%%%%%%%%%%%%', todosList);
 
   return {
-    todosList,
+    donesList,
   };
 }
 
-export default connect(mapStateToProps, {getTodos})(NotesScreen);
+export default connect(mapStateToProps, {getDones})(DoneScreen);

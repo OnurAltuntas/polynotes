@@ -34,7 +34,7 @@ class Boards  extends Component {
           return(
             <View style={styles.container}>
             <Text
-            onPress={() => this.props.navigation.navigate('NotesScreen',{
+            onPress={() => this.props.navigation.navigate('TodosScreen',{
               boardId:temp.title,
               boardKey:tempKey
             })}
