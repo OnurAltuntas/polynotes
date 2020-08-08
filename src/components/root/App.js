@@ -8,6 +8,7 @@ import AddNotesScreen from '../AddNotesScreen';
 import InProgressScreen from '../InProgressScreen';
 import TrelloScreen from '../TrelloScreen';
 import DoneScreen from '../DoneScreen';
+
 import {Provider} from 'react-redux';
 import {createStore,applyMiddleware} from 'redux';
 import ReduxThunk from 'redux-thunk';
@@ -17,6 +18,7 @@ import CreateUser from '../Auth/CreateUser';
 import Boards from '../Boards';
 
 import firebase from 'firebase';
+import EditScreen from '../EditScreen';
 
 const Drawer = createDrawerNavigator();
   const App = () =>  {
@@ -39,6 +41,8 @@ const Drawer = createDrawerNavigator();
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Signin">
         <Drawer.Screen name="TrelloScreen" component={TrelloScreen} />
+        <Drawer.Screen name="EditScreen" component={EditScreen} />
+
         <Drawer.Screen name="Signin" component={Signin} />
         <Drawer.Screen name="CreateUser" component={CreateUser} />
         <Drawer.Screen name="Home" component={HomeScreen} />

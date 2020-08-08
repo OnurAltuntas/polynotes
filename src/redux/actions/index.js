@@ -37,6 +37,41 @@ export const getTodos = (boardKey) => {
   };
 };
 
+export const addTodos = (empty,boardKey) => {
+  return (dispatch) => {
+    console.log(empty);
+    var currentUserId = firebase.auth().currentUser.uid;
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo').push({empty});
+  };
+};
+
+export const todosToInProgress = (empty,boardKey,key) => {
+  return (dispatch) => {
+    console.log(empty);
+    var currentUserId = firebase.auth().currentUser.uid;
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Inprogress').push({empty});
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo/'+key).remove();
+  };
+};
+
+export const deleteTodos = (boardKey,key) => {
+  return (dispatch) => {
+    var currentUserId = firebase.auth().currentUser.uid;
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo/'+key).remove();
+  };
+};
+
+
+
+export const editTodos = (empty,boardKey,key) => {
+  return (dispatch) => {
+    var currentUserId = firebase.auth().currentUser.uid;
+    firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo').child(key).update({empty});
+  };
+};
+
+
+
 export const getInProgress = (boardKey) => {
   return (dispatch) => {
     var currentUserId = firebase.auth().currentUser.uid;
@@ -83,10 +118,6 @@ export function addBoards(id,title){
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo').push({empty});
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Inprogress').push({empty});
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Done').push({empty});
-   
-    
-
-    
   
   }
 }
