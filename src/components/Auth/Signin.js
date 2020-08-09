@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import {StyleSheet, Text, View,Button} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import firebase from 'firebase';
@@ -9,6 +9,17 @@ const Signin = ({ navigation }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      navigation.navigate('Boards');
+
+    }
+ });
+    
+  }, [])
+
 
   const submitHandler = () => {
       console.log(username,password);
@@ -17,7 +28,9 @@ const Signin = ({ navigation }) => {
   }
 
   const onLoginSuccess = () =>{
-      navigation.navigate('Home')
+      navigation.navigate('Boards')
+      
+     
       setError('');
       setLoading(false);
   }
