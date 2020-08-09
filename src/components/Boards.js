@@ -1,10 +1,10 @@
 import React,{useState,useEffect, Component}from 'react'
-import { StyleSheet, Text, View,FlatList ,Button,Alert,
+import { StyleSheet, View,FlatList,Alert,
   Modal,
   TextInput,
   TouchableOpacity,
   Image,BackHandler} from 'react-native'
-  
+import { Container, Header, Content, Button, Icon, Text } from 'native-base';
 import {getBoards} from '../redux/actions/index';
 import {deleteBoards} from '../redux/actions/index';
 import {editBoards} from '../redux/actions/index';
@@ -79,7 +79,7 @@ class Boards  extends Component {
               value={this.state.title}
               value={this.state.title}></TextInput>
 
-            <Button
+            <Button rounded success
               title="Add"
               onPress={() => {
                 this.props.addBoards(
@@ -88,12 +88,16 @@ class Boards  extends Component {
                 );
                 this.setState({title: ''});
                 this.setState({modalVisible: false});
-              }}></Button>
-              <Button
+              }}>
+              <Text>Edit</Text>
+              </Button>
+              <Button rounded success
               title="Close"
               onPress={() => {
                 this.setState({modalVisible: false});
-              }}></Button>
+              }}>
+              <Text>Clos</Text>
+              </Button>
           </View>
         </View>
       </Modal>
@@ -117,7 +121,7 @@ class Boards  extends Component {
               value={this.state.title}
               value={this.state.title}></TextInput>
 
-            <Button
+            <Button rounded success
               title="Edit this Todo"
               onPress={() => {
                 this.props.editBoards(
@@ -126,13 +130,19 @@ class Boards  extends Component {
                 );
                 this.setState({title: ''});
                 this.setState({Visible: false});
-              }}></Button>
+              }}>
+              <Text>Edit</Text>
+              </Button>
 
-              <Button
-              title="Close"
+              <Button rounded success
+              title="Clos"
               onPress={() => {
                 this.setState({Visible: false});
-              }}></Button>
+              }}>
+              <Text>Close</Text>
+              </Button>
+
+              
           </View>
         </View>
       </Modal>
@@ -171,6 +181,13 @@ class Boards  extends Component {
           <Text style={styles.text}
           
           >{item.title}</Text> 
+          <Button iconLeft light
+          onPress={() => this.editHandler(item.key)}
+          >
+          <Icon name='beer' />
+          <Text>Edit</Text>
+        </Button>
+
           <Text style={styles.text} onPress={() => this.editHandler(item.key)}>Edit</Text>
                 <Text style={styles.text}
                   onPress={() => this.props.deleteBoards(item.key)} //

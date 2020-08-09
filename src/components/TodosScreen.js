@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+
 import {getTodos} from '../redux/actions/index';
 import {deleteTodos} from '../redux/actions/index';
 import {editTodos} from '../redux/actions/index';
