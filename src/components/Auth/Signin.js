@@ -43,7 +43,6 @@ const Signin = ({ navigation }) => {
 
   return (
     <Container>
-        <Header />
         <Content>
           <Form>
             <Item>
@@ -61,13 +60,19 @@ const Signin = ({ navigation }) => {
               
             </Item>
             <Button 
-            rounded block success style={{margin:20,}}
+            rounded warning block  style={{margin:20,}}
             title="singin"
             onPress={submitHandler}
             
             >
             <Text>SignIn</Text>
           </Button>
+
+          <Text style={{textAlign:"center"}}
+          onPress={()=>{
+            navigation.navigate('CreateUser')
+          }}
+          >dont you have an account?</Text>
             
           </Form>
         </Content>

@@ -3,8 +3,8 @@ import { StyleSheet, View,FlatList,Alert,
   Modal,
   TextInput,
   TouchableOpacity,
-  Image,BackHandler} from 'react-native'
-import { Container, Header, Content, Button, Icon, Text } from 'native-base';
+  Image,BackHandler,ImageBackground} from 'react-native'
+import { Container, Header, Content, Button, Icon, Text,Fab } from 'native-base';
 import {getBoards} from '../redux/actions/index';
 import {deleteBoards} from '../redux/actions/index';
 import {editBoards} from '../redux/actions/index';
@@ -40,6 +40,7 @@ class Boards  extends Component {
     modalVisible:false,
     itemKey: '',
     title:'',
+    active:'false',
 
     addState: {
       empty: '',
@@ -79,7 +80,7 @@ class Boards  extends Component {
               value={this.state.title}
               value={this.state.title}></TextInput>
 
-            <Button rounded success
+            <Button style={styles.addButton}
               title="Add"
               onPress={() => {
                 this.props.addBoards(
@@ -89,14 +90,16 @@ class Boards  extends Component {
                 this.setState({title: ''});
                 this.setState({modalVisible: false});
               }}>
-              <Text>Edit</Text>
+              <Text>Add</Text>
               </Button>
-              <Button rounded success
+              <Button style={styles.closeButton} iconLeft light
+            
               title="Close"
               onPress={() => {
                 this.setState({modalVisible: false});
               }}>
-              <Text>Clos</Text>
+             
+              <Text>X</Text>
               </Button>
           </View>
         </View>
@@ -121,7 +124,7 @@ class Boards  extends Component {
               value={this.state.title}
               value={this.state.title}></TextInput>
 
-            <Button rounded success
+            <Button style={styles.addButton}
               title="Edit this Todo"
               onPress={() => {
                 this.props.editBoards(
@@ -134,12 +137,14 @@ class Boards  extends Component {
               <Text>Edit</Text>
               </Button>
 
-              <Button rounded success
-              title="Clos"
+              <Button style={styles.closeButton} iconLeft light
+            
+              title="Close"
               onPress={() => {
                 this.setState({Visible: false});
               }}>
-              <Text>Close</Text>
+             
+              <Text>X</Text>
               </Button>
 
               
@@ -160,6 +165,9 @@ class Boards  extends Component {
   
 
   drawHandler = ({navigation, route}) => {
+    
+  const image = { uri: "https://images.unsplash.com/photo-1425342605259-25d80e320565?auto=format&amp;fit=crop&amp;w=750&amp;q=80&amp;ixid=dW5zcGxhc2guY29tOzs7Ozs%3D" };
+  
     return(
       <FlatList style={{width:'100%'}}
       data = {this.props.boardsList}
@@ -171,6 +179,8 @@ class Boards  extends Component {
         return(
           
          <View style={{flex: 1}}>
+         <ImageBackground source={image} style={styles.image}>
+       
           <TouchableOpacity  style={styles.card}
           onPress={() => this.props.navigation.navigate('TodosScreen',{
             boardId:temp.title,
@@ -178,24 +188,23 @@ class Boards  extends Component {
           })}
           >
          
-          <Text style={styles.text}
+          <Text style={{fontSize:22 ,marginTop:20, marginBottom:20}}
           
           >{item.title}</Text> 
-          <Button iconLeft light
-          onPress={() => this.editHandler(item.key)}
-          >
-          <Icon name='beer' />
-          <Text>Edit</Text>
-        </Button>
+          
+         <View  style={{flex: 1, flexDirection: 'row'}}>
+         <Text style={styles.text} onPress={() => this.editHandler(item.key)}>✎</Text>
+         <Text style={styles.text }  onPress={() => this.props.deleteBoards(item.key)}> 🗑 </Text>
+         </View>
 
-          <Text style={styles.text} onPress={() => this.editHandler(item.key)}>Edit</Text>
-                <Text style={styles.text}
-                  onPress={() => this.props.deleteBoards(item.key)} //
-                >
-                  Delete
-                </Text>
+        
+                
+             
+                
+              
         </TouchableOpacity>
-       
+      
+        </ImageBackground>
       </View>
         )
       }}
@@ -205,29 +214,7 @@ class Boards  extends Component {
   }
   
 
-  onPressHandler = ({ navigation }) => {
-    return (
-      <View style={styles.centeredView}>
-      <this.drawHandler />
-      <TouchableOpacity activeOpacity={0.7} onPress={this.addHandler}>
-        <Image
-          //We are making FAB using TouchableOpacity with an image
-          //We are using online image here
-          source={{
-            uri:
-              'https://raw.githubusercontent.com/AboutReact/sampleresource/master/plus_icon.png',
-          }}
-          //You can use you project image Example below
-          //source={require('./images/float-add-icon.png')}
-          style={styles.FloatingButtonStyle}
-        />
-      </TouchableOpacity>
-
-      <this.addModalHandler />
-      <this.editModalHandler />
-    </View>
-    );
-  };
+ 
 
 render(){
   console.log('//////////////////////',this.props.boardsList);
@@ -235,19 +222,26 @@ render(){
     
     <View style={styles.centeredView}>
     <this.drawHandler />
-    <TouchableOpacity activeOpacity={0.7} onPress={this.addHandler}>
-      <Image
-        //We are making FAB using TouchableOpacity with an image
-        //We are using online image here
-        source={{
-          uri:
-            'https://raw.githubusercontent.com/AboutReact/sampleresource/master/plus_icon.png',
-        }}
-        //You can use you project image Example below
-        //source={require('./images/float-add-icon.png')}
-        style={styles.FloatingButtonStyle}
-      />
-    </TouchableOpacity>
+    <Fab icon="add"
+      active={false}
+      direction="right"
+      containerStyle={{ marginLeft: 10 }}
+      style={{ backgroundColor: '#FFB500' }}
+      position="bottomRight"
+      onPress={() => this.addHandler()}
+      
+  >
+    <Icon name="ios-search" />
+      <Button style={{ backgroundColor: '#34A34F' }}>
+          <Icon name="logo-whatsapp" />
+      </Button>
+      <Button style={{ backgroundColor: '#3B5998' }}>
+          <Icon name="logo-facebook" />
+      </Button>
+      <Button disabled style={{ backgroundColor: '#DD5144' }}>
+          <Icon name="ios-mail" />
+      </Button>
+  </Fab>
 
     <this.addModalHandler />
     <this.editModalHandler />

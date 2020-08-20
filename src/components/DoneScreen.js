@@ -1,9 +1,12 @@
 import React, {useEffect, useState, Component} from 'react';
-import {Button, View, Text, FlatList, StyleSheet,Alert,
+import { View, Text, FlatList, StyleSheet,Alert,
   Modal,
   TextInput,
   TouchableOpacity,
-  Image,} from 'react-native';
+  Image,ImageBackground} from 'react-native';
+  import { Container, Header, Content, Button, Icon,Fab,Footer,FooterTab } from 'native-base';
+
+
 import {getDones} from '../redux/actions/index';
 import {deleteDones} from '../redux/actions/index';
 import {addDones} from '../redux/actions/index';
@@ -63,12 +66,12 @@ class DoneScreen extends Component {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <TextInput
-              placeholder=""
+              placeholder="enter here"
               onChangeText={(add) => this.setState({add})}
               value={this.state.add}
               value={this.state.add}></TextInput>
 
-            <Button
+            <Button style={styles.addButton}
               title="Edit this Todo"
               onPress={() => {
                 this.props.addDones(
@@ -77,7 +80,21 @@ class DoneScreen extends Component {
                 );
                 this.setState({add: ''});
                 this.setState({modalVisible: false});
-              }}></Button>
+              }}>
+              <Text>Add</Text>
+              </Button>
+
+
+              <Button style={styles.closeButton} iconLeft light
+            
+              title="Close"
+              onPress={() => {
+                this.setState({modalVisible: false});
+              }}>
+             
+              <Text>X</Text>
+              </Button>
+
           </View>
         </View>
       </Modal>
@@ -97,12 +114,12 @@ class DoneScreen extends Component {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <TextInput
-              placeholder=""
+              placeholder="enter here"
               onChangeText={(empty) => this.setState({empty})}
               value={this.state.empty}
               value={this.state.empty}></TextInput>
 
-            <Button
+            <Button style={styles.addButton}
               title="Edit this Todo"
               onPress={() => {
                 this.props.editDones(
@@ -112,7 +129,20 @@ class DoneScreen extends Component {
                 );
                 this.setState({empty: ''});
                 this.setState({Visible: false});
-              }}></Button>
+              }}>
+              <Text>Edit</Text>
+              </Button>
+
+              <Button style={styles.closeButton} iconLeft light
+            
+              title="Close"
+              onPress={() => {
+                this.setState({Visible: false});
+              }}>
+             
+              <Text>X</Text>
+              </Button>
+
           </View>
         </View>
       </Modal>
@@ -121,6 +151,8 @@ class DoneScreen extends Component {
 
   drawHandler = ({navigation, route}) => {
     const {boardKey} = this.props.route.params;
+  const image = { uri: "https://images.unsplash.com/photo-1425342605259-25d80e320565?auto=format&amp;fit=crop&amp;w=750&amp;q=80&amp;ixid=dW5zcGxhc2guY29tOzs7Ozs%3D" };
+
     return (
    
 
@@ -131,15 +163,24 @@ class DoneScreen extends Component {
           renderItem={({item}) => {
             return (
               <View style={{flex: 1}}>
+              <ImageBackground source={image} style={styles.image}>
               <TouchableOpacity  style={styles.card}>
-                <Text style={styles.text}>{item.empty}</Text>
-                <Text style={styles.text} onPress={() => this.editHandler(item.key)}>Edit</Text>
+              <Text style={{fontSize:22 ,marginTop:20, marginBottom:20}} >{item.empty}</Text>
+
+
+                <View  style={{flex: 1, flexDirection: 'row'}}>
+
+                <Text style={styles.text} onPress={() => this.editHandler(item.key)}>✎</Text>
                 <Text style={styles.text}
                 onPress={() => this.props.deleteDones(boardKey, item.key)} //
                 >
-                Delete
+                🗑
               </Text>
+
+              </View>
+
               </TouchableOpacity>
+              </ImageBackground>
               </View>
             );
           }}
@@ -154,33 +195,75 @@ class DoneScreen extends Component {
     const {boardKey} = this.props.route.params;
 
     return (
-      <View style={styles.centeredView}>
+      <Container >
+      <Text>Dones</Text>
       <this.drawHandler />
-      <TouchableOpacity activeOpacity={0.7} onPress={this.addHandler}>
-        <Image
-          //We are making FAB using TouchableOpacity with an image
-          //We are using online image here
-          source={{
-            uri:
-              'https://raw.githubusercontent.com/AboutReact/sampleresource/master/plus_icon.png',
-          }}
-          //You can use you project image Example below
-          //source={require('./images/float-add-icon.png')}
-          style={styles.FloatingButtonStyle}
-        />
-      </TouchableOpacity>
-
-      <this.addModalHandler />
-      <this.editModalHandler />
-
-      <Button
-      title='<-- InProgress '
-      onPress={() => this.props.navigation.navigate('InProgressScreen',{
-        boardKey:boardKey
-      })}
-      />
-
-    </View>
+         <Footer>
+           <FooterTab  style={{backgroundColor:"#FFB500"}}>
+ 
+           <Button vertical
+           onPress={() =>
+            this.props.navigation.navigate('TodosScreen', {
+              boardKey: boardKey,
+            })
+          }
+           
+           >
+           <Icon active name="navigate" />
+           <Text>Todo</Text>
+         </Button>
+            
+             <Button vertical
+             onPress={() =>
+               this.props.navigation.navigate('InProgressScreen', {
+                 boardKey: boardKey,
+               })
+             }
+             >
+               <Icon name="camera" />
+            <Text>Wip</Text>
+ 
+             </Button>
+ 
+             <Button vertical
+             onPress={() =>
+               this.props.navigation.navigate('DoneScreen', {
+                 boardKey: boardKey,
+               })
+             }
+             >
+               <Icon name="apps" />
+            <Text>Done</Text>
+ 
+             </Button>
+            
+          
+           </FooterTab>
+         </Footer>
+ 
+         <Fab icon="add"
+         active={false}
+         direction="right"
+         containerStyle={{ marginLeft: 10 }}
+         style={{ backgroundColor: '#FFB500' }}
+         position="bottomRight"
+         onPress={() => this.addHandler()}
+         
+     >
+       <Icon name="ios-search" />
+         <Button style={{ backgroundColor: '#34A34F' }}>
+             <Icon name="logo-whatsapp" />
+         </Button>
+         <Button style={{ backgroundColor: '#3B5998' }}>
+             <Icon name="logo-facebook" />
+         </Button>
+         <Button disabled style={{ backgroundColor: '#DD5144' }}>
+             <Icon name="ios-mail" />
+         </Button>
+     </Fab>
+ 
+         
+       </Container>
     );
   }
 }

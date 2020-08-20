@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
-import {StyleSheet, Text, View,Button,CheckBox} from 'react-native';
+import {StyleSheet, Text, View,CheckBox,ToastAndroid} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { Container, Header, Content, Form, Item, Input,Button} from 'native-base';
 import firebase from 'firebase';
 
 const CreateUser = ({ navigation }) => {
@@ -12,7 +13,12 @@ const CreateUser = ({ navigation }) => {
 
 
   const submitHandler = () => {
-      firebase.auth().createUserWithEmailAndPassword(username,password)
+      firebase.auth().createUserWithEmailAndPassword(username,password).catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        ToastAndroid.show(errorMessage, ToastAndroid.SHORT);
+        // ...
+      })
       .then(onLoginSuccess)
   }
 
@@ -29,31 +35,41 @@ const CreateUser = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.View}>
-        <TextInput
-        placeholder="email"
-        value={username}
-        onChangeText={(value) => setUsername(value)}
-        ></TextInput>
-        <TextInput
-        placeholder="password"
-        value={password}
-        secureTextEntry={true}
-        onChangeText={(value) => setPassword(value)}
-        ></TextInput>
-        <Button
-        title="CreateUser"
-        onPress={submitHandler}
-       
-      />
+    <Container>
+        <Content>
+          <Form>
+            <Item>
+              <Input placeholder="Username"
+              value={username}
+              onChangeText={(value) => setUsername(value)}
+              />
+            </Item>
+            <Item last>
+              <Input placeholder="Password"
+              value={password}
+              secureTextEntry={true}
+              onChangeText={(value) => setPassword(value)}
+              />
+              
+            </Item>
+            <Button 
+            rounded block success style={{margin:20,}}
+            title="singin"
+            onPress={submitHandler}
+            
+            >
+            <Text>Signup</Text>
+          </Button>
 
-      <CheckBox
-      value={isSelected}
-      onValueChange={(value)=>{rememberHandler(value)}}
-      style={styles.checkbox}
-    />
-   
-    </View>
+          <Text style={{textAlign:"center"}}
+          onPress={()=>{
+            navigation.navigate('Signin')
+          }}
+          >Do you have already an account?</Text>
+            
+          </Form>
+        </Content>
+      </Container>
   );
 };
 
