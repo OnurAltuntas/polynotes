@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import { color } from 'react-native-reanimated';
+import road from "../../assests/road.jpg"
 
 export default StyleSheet.create({
        card: {
@@ -16,16 +17,21 @@ export default StyleSheet.create({
          borderRadius:30,
          color:"#000"
        },
+       backgroundImage: {
+        flex: 1,
+        resizeMode: 'cover', // or 'stretch'
+    },
 
        text:{
       
         textAlign:"center",
         height : 44 ,
         width :44,
-        fontSize:20,
+        fontSize:29,
+        color:"#5B7594",
         marginLeft:10,
-        backgroundColor:'#FFB500',
-        borderRadius: 44/2,
+        backgroundColor:'#DCEEF2',
+        borderRadius: 10,
        },
 
        image: {
@@ -38,16 +44,8 @@ export default StyleSheet.create({
         textAlign: 'center',
         margin:7,
        
+        backgroundColor:"#fff9",
       
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 6,
-        },
-        shadowOpacity: 0.37,
-        shadowRadius: 7.49,
-        
-        elevation: 12,
       },
 
   container: {
@@ -58,9 +56,7 @@ export default StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
+    justifyContent: "center", alignItems: "center"
   },
   modalView: {
     margin: 0,

@@ -14,7 +14,6 @@ import firebase from '../../Config/FbConfig';
 export const getBoards = (temp) => {
   return (dispatch) => {
     var currentUserId = firebase.auth().currentUser.uid;
-    console.log('$$$$$$$$$$$$$'+temp);
     firebase.database().ref('/'+currentUserId+'/Boards').on('value', (snapshot) => {
       dispatch({
         type: 'BOARDS_FETCH',
@@ -39,7 +38,6 @@ export const getTodos = (boardKey) => {
 
 export const addTodos = (empty,boardKey) => {
   return (dispatch) => {
-    console.log(empty);
     var currentUserId = firebase.auth().currentUser.uid;
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo').push({empty});
   };
@@ -59,7 +57,6 @@ export const editTodos = (empty,boardKey,key) => {
 
 export const todosToInProgress = (empty,boardKey,key) => {
   return (dispatch) => {
-    console.log(empty);
     var currentUserId = firebase.auth().currentUser.uid;
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Inprogress').push({empty});
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo/'+key).remove();
@@ -83,7 +80,6 @@ export const getInProgress = (boardKey) => {
 
 export const addInProgress = (empty,boardKey) => {
   return (dispatch) => {
-    console.log(empty);
     var currentUserId = firebase.auth().currentUser.uid;
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Inprogress').push({empty});
   };
@@ -103,7 +99,6 @@ export const editInProgress = (empty,boardKey,key) => {
 
 export const InProgressToDone = (empty,boardKey,key) => {
   return (dispatch) => {
-    console.log(empty);
     var currentUserId = firebase.auth().currentUser.uid;
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Done').push({empty});
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Inprogress/'+key).remove();
@@ -126,7 +121,6 @@ export const getDones = (boardKey) => {
 
 export const addDones = (empty,boardKey) => {
   return (dispatch) => {
-    console.log(empty);
     var currentUserId = firebase.auth().currentUser.uid;
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Done').push({empty});
   };
@@ -160,7 +154,6 @@ export function addBoards(title){
     }
     
     var boardKey = firebase.database().ref('/'+currentUserId+'/Boards').push({title}).getKey();
-    console.log(JSON.stringify(boardKey));
     var empty = '';
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Todo').push({empty});
     firebase.database().ref('/'+currentUserId+'/Boards/'+boardKey+'/Inprogress').push({empty});

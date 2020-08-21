@@ -13,7 +13,7 @@ const CreateUser = ({ navigation }) => {
 
 
   const submitHandler = () => {
-      firebase.auth().createUserWithEmailAndPassword(username,password).catch(function(error) {
+      firebase.auth().createUserWithEmailAndPassword(username.trim(),password.trim()).catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
         ToastAndroid.show(errorMessage, ToastAndroid.SHORT);
@@ -53,15 +53,15 @@ const CreateUser = ({ navigation }) => {
               
             </Item>
             <Button 
-            rounded block success style={{margin:20,}}
+            rounded block warning style={{margin:20,}}
             title="singin"
             onPress={submitHandler}
             
             >
-            <Text>Signup</Text>
+            <Text style={{fontSize:20}}>Sign up</Text>
           </Button>
 
-          <Text style={{textAlign:"center"}}
+          <Text style={{textAlign:"center",fontSize:16}}
           onPress={()=>{
             navigation.navigate('Signin')
           }}

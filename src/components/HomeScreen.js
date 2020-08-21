@@ -16,7 +16,6 @@ import {connect} from 'react-redux'
 
 class HomeScreen extends React.Component {
   componentDidMount(){
-  console.log('vay amk')
 
   }
     state = {

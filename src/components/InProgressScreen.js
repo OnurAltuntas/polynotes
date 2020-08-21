@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet,Alert,
   Modal,Text,
   TextInput,
   TouchableOpacity,
-  Image,ImageBackground} from 'react-native';
+  Image,ImageBackground,ToastAndroid} from 'react-native';
 import { Container, Header, Content, Button, Icon,Fab,Footer,FooterTab } from 'native-base';
 
 
@@ -16,6 +16,8 @@ import styles from '../components/style/styles';
 import firebase from 'firebase';
 import {connect} from 'react-redux';
 import _ from 'lodash';
+import bg from "../assests/sea.jpg"
+
 
 class InProgressScreen extends Component {
   componentDidMount() {
@@ -23,7 +25,6 @@ class InProgressScreen extends Component {
 
     var temp = JSON.stringify(boardKey);
 
-    console.log(boardKey);
 
     this.props.getInProgress(boardKey);
   }
@@ -44,7 +45,6 @@ class InProgressScreen extends Component {
   editHandler = (_itemKey) => {
     this.setState({Visible: true});
     this.setState({itemKey: _itemKey});
-    console.log('$$$$$$$$$$$$$$$$' + _itemKey);
 
     //this.props.navigation.navigate('EditScreen');
   };
@@ -73,10 +73,19 @@ class InProgressScreen extends Component {
             <Button style={styles.addButton}
               title="Add"
               onPress={() => {
-                this.props.addInProgress(
-                  this.state.add,
-                  boardKey,
-                );
+
+
+                if(this.state.add===""){
+                  ToastAndroid.show("Empty task cannot be entered!", ToastAndroid.SHORT);
+                }
+                else{
+               
+                  this.props.addInProgress(
+                    this.state.add,
+                    boardKey,
+                  );
+                }
+              
                 this.setState({add: ''});
                 this.setState({modalVisible: false});
               }}> 
@@ -90,7 +99,7 @@ class InProgressScreen extends Component {
                 this.setState({modalVisible: false});
               }}>
              
-              <Text>X</Text>
+              <Text style={{fontSize:18,color:"#fff"}}>   X</Text>
               </Button>
           </View>
         </View>
@@ -111,7 +120,7 @@ class InProgressScreen extends Component {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <TextInput
-              placeholder=""
+              placeholder="enter here"
               onChangeText={(empty) => this.setState({empty})}
               value={this.state.empty}
               value={this.state.empty}></TextInput>
@@ -119,11 +128,19 @@ class InProgressScreen extends Component {
             <Button  style={styles.addButton}
               title="Edit this Todo"
               onPress={() => {
-                this.props.editInProgress(
+
+                if(this.state.empty===""){
+                  ToastAndroid.show("Empty task cannot be entered!", ToastAndroid.SHORT);
+                }
+                else{
+
+                  this.props.editInProgress(
                   this.state.empty,
                   boardKey,
                   this.state.itemKey,
                 );
+                }
+
                 this.setState({empty: ''});
                 this.setState({Visible: false});
               }}>
@@ -137,7 +154,7 @@ class InProgressScreen extends Component {
                 this.setState({Visible: false});
               }}>
              
-              <Text>X</Text>
+              <Text style={{fontSize:18,color:"#fff"}}>   X</Text>
               </Button>
           </View>
         </View>
@@ -159,10 +176,13 @@ class InProgressScreen extends Component {
           renderItem={({item}) => {
             return (
               <View style={{flex: 1}}>
-              <ImageBackground source={image} style={styles.image}>
+              <ImageBackground  source={image}  style={ styles.image}
+              imageStyle={{ borderRadius: 25 }}>
               <TouchableOpacity  style={styles.card}>
 
-             <Text style={{fontSize:22 ,marginTop:20, marginBottom:20}} >{item.empty}</Text>
+              <Text style={{fontSize:20 ,marginTop:20, marginBottom:20,backgroundColor:"#DCEEF2",minWidth:200,textAlign:"center",borderRadius:10,opacity: 0.9,paddingRight:10,paddingLeft:10}}
+          
+              >{item.empty}</Text>
              <View  style={{flex: 1, flexDirection: 'row'}}>
                 <Text style={styles.text} onPress={() => this.editHandler(item.key)}>✎</Text>
                 <Text style={styles.text}
@@ -198,15 +218,17 @@ class InProgressScreen extends Component {
   };
 
   render() {
-    console.log('---------------------', this.props.InProgressList);
     const {boardKey} = this.props.route.params;
 
     return (
+      <View style={{flex:1}}>
       <Container >
-      <Text>Wip</Text>
+      <ImageBackground source={bg} style={styles.backgroundImage} >
       <this.drawHandler />
+      <this.addModalHandler/>
+      <this.editModalHandler/>
          <Footer>
-           <FooterTab  style={{backgroundColor:"#FFB500"}}>
+           <FooterTab  style={{backgroundColor:"#133149"}}>
  
            <Button vertical
            onPress={() =>
@@ -216,8 +238,8 @@ class InProgressScreen extends Component {
           }
            
            >
-           <Icon active name="navigate" />
-           <Text>Todo</Text>
+           <Text style={{color:"#DCEEF2",fontSize:15,  fontWeight: 'bold'}}>//</Text>
+           <Text style={{color:"#DCEEF2",fontSize:13,  fontWeight: 'bold'}}>Todo</Text>
          </Button>
             
              <Button vertical
@@ -227,8 +249,8 @@ class InProgressScreen extends Component {
                })
              }
              >
-               <Icon name="camera" />
-            <Text>Wip</Text>
+             <Text style={{color:"#DCEEF2",fontSize:25, fontWeight: 'bold'}}>⋯</Text>
+             <Text style={{color:"#DCEEF2",fontSize:13,  fontWeight: 'bold'}}>Wip</Text>
  
              </Button>
  
@@ -239,8 +261,8 @@ class InProgressScreen extends Component {
                })
              }
              >
-               <Icon name="apps" />
-            <Text>Done</Text>
+             <Text style={{color:"#DCEEF2",fontSize:20,  fontWeight: 'bold'}}>	✓</Text>
+             <Text style={{color:"#DCEEF2",fontSize:13,  fontWeight: 'bold'}}>Done</Text>
  
              </Button>
             
@@ -251,13 +273,13 @@ class InProgressScreen extends Component {
          <Fab icon="add"
          active={false}
          direction="right"
-         containerStyle={{ marginLeft: 10 }}
+         containerStyle={{ marginLeft: 10,marginBottom:50}}
          style={{ backgroundColor: '#FFB500' }}
          position="bottomRight"
          onPress={() => this.addHandler()}
          
      >
-       <Icon name="ios-search" />
+       <Icon name="add" />
          <Button style={{ backgroundColor: '#34A34F' }}>
              <Icon name="logo-whatsapp" />
          </Button>
@@ -268,9 +290,9 @@ class InProgressScreen extends Component {
              <Icon name="ios-mail" />
          </Button>
      </Fab>
- 
-         
-       </Container>
+     </ImageBackground>
+     </Container> 
+     </View>
     );
   }
 }

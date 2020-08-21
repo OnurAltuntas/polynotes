@@ -1,11 +1,27 @@
 import React, {useEffect, useState, Component} from 'react';
-import { View, Text, FlatList, StyleSheet,Alert,
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Alert,
   Modal,
   TextInput,
   TouchableOpacity,
-  Image,ImageBackground} from 'react-native';
-  import { Container, Header, Content, Button, Icon,Fab,Footer,FooterTab } from 'native-base';
-
+  Image,
+  ImageBackground,
+  ToastAndroid
+} from 'react-native';
+import {
+  Container,
+  Header,
+  Content,
+  Button,
+  Icon,
+  Fab,
+  Footer,
+  FooterTab,
+} from 'native-base';
 
 import {getDones} from '../redux/actions/index';
 import {deleteDones} from '../redux/actions/index';
@@ -15,15 +31,15 @@ import styles from '../components/style/styles';
 import firebase from 'firebase';
 import {connect} from 'react-redux';
 import _ from 'lodash';
+import bg from "../assests/sea.jpg"
+
 
 class DoneScreen extends Component {
   componentDidMount() {
-
     const {boardKey} = this.props.route.params;
 
     var temp = JSON.stringify(boardKey);
 
-    console.log(boardKey);
 
     this.props.getDones(boardKey);
   }
@@ -31,9 +47,9 @@ class DoneScreen extends Component {
   state = {
     empty: '',
     Visible: false,
-    modalVisible:false,
+    modalVisible: false,
     itemKey: '',
-    add:'',
+    add: '',
 
     addState: {
       empty: '',
@@ -41,11 +57,9 @@ class DoneScreen extends Component {
     },
   };
 
-
   editHandler = (_itemKey) => {
     this.setState({Visible: true});
     this.setState({itemKey: _itemKey});
-    console.log('$$$$$$$$$$$$$$$$' + _itemKey);
 
     //this.props.navigation.navigate('EditScreen');
   };
@@ -71,34 +85,39 @@ class DoneScreen extends Component {
               value={this.state.add}
               value={this.state.add}></TextInput>
 
-            <Button style={styles.addButton}
+            <Button
+              style={styles.addButton}
               title="Edit this Todo"
               onPress={() => {
-                this.props.addDones(
-                  this.state.add,
-                  boardKey,
-                );
+                if (this.state.add === '') {
+                  ToastAndroid.show(
+                    'Empty task cannot be entered!',
+                    ToastAndroid.SHORT,
+                  );
+                } else {
+                  this.props.addDones(this.state.add, boardKey);
+                }
+
                 this.setState({add: ''});
                 this.setState({modalVisible: false});
               }}>
               <Text>Add</Text>
-              </Button>
+            </Button>
 
-
-              <Button style={styles.closeButton} iconLeft light
-            
+            <Button
+              style={styles.closeButton}
+              iconLeft
+              light
               title="Close"
               onPress={() => {
                 this.setState({modalVisible: false});
               }}>
-             
-              <Text>X</Text>
-              </Button>
-
+              <Text style={{fontSize:18,color:"#fff"}}>   X</Text>
+            </Button>
           </View>
         </View>
       </Modal>
-    )
+    );
   };
 
   editModalHandler = () => {
@@ -119,30 +138,39 @@ class DoneScreen extends Component {
               value={this.state.empty}
               value={this.state.empty}></TextInput>
 
-            <Button style={styles.addButton}
+            <Button
+              style={styles.addButton}
               title="Edit this Todo"
               onPress={() => {
-                this.props.editDones(
-                  this.state.empty,
-                  boardKey,
-                  this.state.itemKey,
-                );
+                if (this.state.empty === '') {
+                  ToastAndroid.show(
+                    'Empty task cannot be entered!',
+                    ToastAndroid.SHORT,
+                  );
+                } else {
+                  this.props.editDones(
+                    this.state.empty,
+                    boardKey,
+                    this.state.itemKey,
+                  );
+                }
+
                 this.setState({empty: ''});
                 this.setState({Visible: false});
               }}>
               <Text>Edit</Text>
-              </Button>
+            </Button>
 
-              <Button style={styles.closeButton} iconLeft light
-            
+            <Button
+              style={styles.closeButton}
+              iconLeft
+              light
               title="Close"
               onPress={() => {
                 this.setState({Visible: false});
               }}>
-             
-              <Text>X</Text>
-              </Button>
-
+              <Text style={{fontSize:18,color:"#fff"}}>   X</Text>
+            </Button>
           </View>
         </View>
       </Modal>
@@ -151,123 +179,141 @@ class DoneScreen extends Component {
 
   drawHandler = ({navigation, route}) => {
     const {boardKey} = this.props.route.params;
-  const image = { uri: "https://images.unsplash.com/photo-1425342605259-25d80e320565?auto=format&amp;fit=crop&amp;w=750&amp;q=80&amp;ixid=dW5zcGxhc2guY29tOzs7Ozs%3D" };
+    const image = {
+      uri:
+        'https://images.unsplash.com/photo-1425342605259-25d80e320565?auto=format&amp;fit=crop&amp;w=750&amp;q=80&amp;ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
+    };
 
     return (
-   
+      <FlatList
+        style={{width: '100%'}}
+        data={this.props.donesList}
+        keyExtractor={(item) => item.key}
+        renderItem={({item}) => {
+          return (
+            <View style={{flex: 1}}>
+              <ImageBackground
+                source={image}
+                style={styles.image}
+                imageStyle={{borderRadius: 25}}>
+                <TouchableOpacity style={styles.card}>
+                <Text style={{fontSize:20 ,marginTop:20, marginBottom:20,backgroundColor:"#DCEEF2",minWidth:200,textAlign:"center",borderRadius:10,opacity: 0.9,paddingRight:10,paddingLeft:10}}
+          
+                >{item.empty}</Text>
 
-        <FlatList
-          style={{width: '100%'}}
-          data={this.props.donesList}
-          keyExtractor={(item) => item.key}
-          renderItem={({item}) => {
-            return (
-              <View style={{flex: 1}}>
-              <ImageBackground source={image} style={styles.image}>
-              <TouchableOpacity  style={styles.card}>
-              <Text style={{fontSize:22 ,marginTop:20, marginBottom:20}} >{item.empty}</Text>
-
-
-                <View  style={{flex: 1, flexDirection: 'row'}}>
-
-                <Text style={styles.text} onPress={() => this.editHandler(item.key)}>✎</Text>
-                <Text style={styles.text}
-                onPress={() => this.props.deleteDones(boardKey, item.key)} //
-                >
-                🗑
-              </Text>
-
-              </View>
-
-              </TouchableOpacity>
+                  <View style={{flex: 1, flexDirection: 'row'}}>
+                    <Text
+                      style={styles.text}
+                      onPress={() => this.editHandler(item.key)}>
+                      ✎
+                    </Text>
+                    <Text
+                      style={styles.text}
+                      onPress={() => this.props.deleteDones(boardKey, item.key)} //
+                    >
+                      🗑
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </ImageBackground>
-              </View>
-            );
-          }}
-        />
-      
-    
+            </View>
+          );
+        }}
+      />
     );
   };
 
   render() {
-    console.log('---------------------', this.props.donesList);
     const {boardKey} = this.props.route.params;
 
     return (
+      <View style={{flex:1}}>
       <Container >
-      <Text>Dones</Text>
-      <this.drawHandler />
-         <Footer>
-           <FooterTab  style={{backgroundColor:"#FFB500"}}>
- 
-           <Button vertical
-           onPress={() =>
-            this.props.navigation.navigate('TodosScreen', {
-              boardKey: boardKey,
-            })
-          }
-           
-           >
-           <Icon active name="navigate" />
-           <Text>Todo</Text>
-         </Button>
-            
-             <Button vertical
-             onPress={() =>
-               this.props.navigation.navigate('InProgressScreen', {
-                 boardKey: boardKey,
-               })
-             }
-             >
-               <Icon name="camera" />
-            <Text>Wip</Text>
- 
-             </Button>
- 
-             <Button vertical
-             onPress={() =>
-               this.props.navigation.navigate('DoneScreen', {
-                 boardKey: boardKey,
-               })
-             }
-             >
-               <Icon name="apps" />
-            <Text>Done</Text>
- 
-             </Button>
-            
-          
-           </FooterTab>
-         </Footer>
- 
-         <Fab icon="add"
-         active={false}
-         direction="right"
-         containerStyle={{ marginLeft: 10 }}
-         style={{ backgroundColor: '#FFB500' }}
-         position="bottomRight"
-         onPress={() => this.addHandler()}
-         
-     >
-       <Icon name="ios-search" />
-         <Button style={{ backgroundColor: '#34A34F' }}>
-             <Icon name="logo-whatsapp" />
-         </Button>
-         <Button style={{ backgroundColor: '#3B5998' }}>
-             <Icon name="logo-facebook" />
-         </Button>
-         <Button disabled style={{ backgroundColor: '#DD5144' }}>
-             <Icon name="ios-mail" />
-         </Button>
-     </Fab>
- 
-         
-       </Container>
+      <ImageBackground source={bg} style={styles.backgroundImage} >
+        <this.drawHandler />
+        <this.addModalHandler/>
+        <this.editModalHandler/>
+        <Footer>
+          <FooterTab style={{backgroundColor: '#133149'}}>
+            <Button
+              vertical
+              onPress={() =>
+                this.props.navigation.navigate('TodosScreen', {
+                  boardKey: boardKey,
+                })
+              }>
+              <Text
+                style={{color: '#DCEEF2', fontSize: 15, fontWeight: 'bold'}}>
+                //
+              </Text>
+              <Text
+                style={{color: '#DCEEF2', fontSize: 13, fontWeight: 'bold'}}>
+                Todo
+              </Text>
+            </Button>
+
+            <Button
+              vertical
+              onPress={() =>
+                this.props.navigation.navigate('InProgressScreen', {
+                  boardKey: boardKey,
+                })
+              }>
+              <Text
+                style={{color: '#DCEEF2', fontSize: 25, fontWeight: 'bold'}}>
+                ⋯
+              </Text>
+              <Text
+                style={{color: '#DCEEF2', fontSize: 13, fontWeight: 'bold'}}>
+                Wip
+              </Text>
+            </Button>
+
+            <Button
+              vertical
+              onPress={() =>
+                this.props.navigation.navigate('DoneScreen', {
+                  boardKey: boardKey,
+                })
+              }>
+              <Text
+                style={{color: '#DCEEF2', fontSize: 20, fontWeight: 'bold'}}>
+                {' '}
+                ✓
+              </Text>
+              <Text
+                style={{color: '#DCEEF2', fontSize: 13, fontWeight: 'bold'}}>
+                Done
+              </Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+
+        <Fab
+          icon="add"
+          active={false}
+          direction="right"
+          containerStyle={{marginLeft: 10, marginBottom: 50}}
+          style={{backgroundColor: '#FFB500'}}
+          position="bottomRight"
+          onPress={() => this.addHandler()}>
+          <Icon name="add" />
+          <Button style={{backgroundColor: '#34A34F'}}>
+            <Icon name="logo-whatsapp" />
+          </Button>
+          <Button style={{backgroundColor: '#3B5998'}}>
+            <Icon name="logo-facebook" />
+          </Button>
+          <Button disabled style={{backgroundColor: '#DD5144'}}>
+            <Icon name="ios-mail" />
+          </Button>
+        </Fab>
+        </ImageBackground>
+        </Container> 
+        </View>
     );
   }
 }
-
 
 function mapStateToProps(state) {
   const donesList = _.map(state.donesList.donesList, (val, key) => {
@@ -282,4 +328,9 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {getDones,deleteDones,addDones,editDones})(DoneScreen);
+export default connect(mapStateToProps, {
+  getDones,
+  deleteDones,
+  addDones,
+  editDones,
+})(DoneScreen);

@@ -3,7 +3,7 @@ import { StyleSheet, View,FlatList,Alert,
   Modal,
   TextInput,
   TouchableOpacity,
-  Image,BackHandler,ImageBackground} from 'react-native'
+  Image,BackHandler,ImageBackground, ToastAndroid} from 'react-native'
 import { Container, Header, Content, Button, Icon, Text,Fab } from 'native-base';
 import {getBoards} from '../redux/actions/index';
 import {deleteBoards} from '../redux/actions/index';
@@ -15,6 +15,10 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import firebase from 'firebase';
 import { StackActions, NavigationActions } from '@react-navigation/native';
+import bg from "../assests/sea.jpg"
+import road from "../assests/road.jpg"
+
+
 
 
 
@@ -53,7 +57,6 @@ class Boards  extends Component {
   editHandler = (_itemKey) => {
     this.setState({Visible: true});
     this.setState({itemKey: _itemKey});
-    console.log('$$$$$$$$$$$$$$$$' + _itemKey);
 
     //this.props.navigation.navigate('EditScreen');
   };
@@ -66,7 +69,8 @@ class Boards  extends Component {
   addModalHandler = () => {
     return (
       <Modal
-        animationType="slide"
+      
+        animationType="fade"
         transparent={true}
         visible={this.state.modalVisible}
         onRequestClose={() => {
@@ -83,10 +87,15 @@ class Boards  extends Component {
             <Button style={styles.addButton}
               title="Add"
               onPress={() => {
-                this.props.addBoards(
-                  this.state.title,
+                if(this.state.title===""){
+                  ToastAndroid.show("Empty task cannot be entered!", ToastAndroid.SHORT);
+                }
+                else{
+                  this.props.addBoards(
+                    this.state.title,
+                  );
+                }
                
-                );
                 this.setState({title: ''});
                 this.setState({modalVisible: false});
               }}>
@@ -99,7 +108,7 @@ class Boards  extends Component {
                 this.setState({modalVisible: false});
               }}>
              
-              <Text>X</Text>
+              <Text style={{fontSize:18}}>X</Text>
               </Button>
           </View>
         </View>
@@ -166,7 +175,6 @@ class Boards  extends Component {
 
   drawHandler = ({navigation, route}) => {
     
-  const image = { uri: "https://images.unsplash.com/photo-1425342605259-25d80e320565?auto=format&amp;fit=crop&amp;w=750&amp;q=80&amp;ixid=dW5zcGxhc2guY29tOzs7Ozs%3D" };
   
     return(
       <FlatList style={{width:'100%'}}
@@ -179,7 +187,8 @@ class Boards  extends Component {
         return(
           
          <View style={{flex: 1}}>
-         <ImageBackground source={image} style={styles.image}>
+         <ImageBackground source={road}  style={styles.image}
+         imageStyle={{ borderRadius: 25,borderColor:"#fff",borderWidth:1 }}>
        
           <TouchableOpacity  style={styles.card}
           onPress={() => this.props.navigation.navigate('TodosScreen',{
@@ -188,13 +197,13 @@ class Boards  extends Component {
           })}
           >
          
-          <Text style={{fontSize:22 ,marginTop:20, marginBottom:20}}
+          <Text style={{fontSize:20 ,marginTop:20, marginBottom:20,backgroundColor:"#DCEEF2",minWidth:200,textAlign:"center",borderRadius:10,opacity: 0.9,paddingRight:10,paddingLeft:10}}
           
           >{item.title}</Text> 
           
          <View  style={{flex: 1, flexDirection: 'row'}}>
          <Text style={styles.text} onPress={() => this.editHandler(item.key)}>✎</Text>
-         <Text style={styles.text }  onPress={() => this.props.deleteBoards(item.key)}> 🗑 </Text>
+         <Text style={styles.text }  onPress={() => this.props.deleteBoards(item.key)}>🗑</Text>
          </View>
 
         
@@ -217,21 +226,20 @@ class Boards  extends Component {
  
 
 render(){
-  console.log('//////////////////////',this.props.boardsList);
   return (
-    
+    <ImageBackground source={bg} style={styles.backgroundImage} >
     <View style={styles.centeredView}>
     <this.drawHandler />
     <Fab icon="add"
       active={false}
       direction="right"
       containerStyle={{ marginLeft: 10 }}
-      style={{ backgroundColor: '#FFB500' }}
+      style={{ backgroundColor: '#FFA445' }}
       position="bottomRight"
       onPress={() => this.addHandler()}
       
   >
-    <Icon name="ios-search" />
+    <Icon name="add" />
       <Button style={{ backgroundColor: '#34A34F' }}>
           <Icon name="logo-whatsapp" />
       </Button>
@@ -245,7 +253,9 @@ render(){
 
     <this.addModalHandler />
     <this.editModalHandler />
+  
   </View>
+  </ImageBackground>
   );
 }
 }

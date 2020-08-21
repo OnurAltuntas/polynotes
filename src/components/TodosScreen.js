@@ -9,7 +9,7 @@ import {
   Modal,
   TextInput,
   TouchableOpacity,
-  Image,ImageBackground
+  Image,ImageBackground,ToastAndroid
 } from 'react-native';
 import { Container, Header, Content, Button, Icon, Text,Fab } from 'native-base';
 import { Footer, FooterTab  } from 'native-base';
@@ -25,6 +25,8 @@ import styles from '../components/style/styles';
 import firebase from 'firebase';
 import {connect} from 'react-redux';
 import _ from 'lodash';
+import bg from "../assests/sea.jpg"
+
 
 class TodosScreen extends Component {
   componentDidMount() {
@@ -34,7 +36,6 @@ class TodosScreen extends Component {
 
     var temp = JSON.stringify(boardKey);
 
-    console.log(boardKey);
 
     this.props.getTodos(boardKey);
   }
@@ -57,13 +58,11 @@ class TodosScreen extends Component {
    
     this.setState({Visible: true});
     this.setState({itemKey: _itemKey});
-    console.log('$$$$$$$$$$$$$$$$' + _itemKey);
 
     //this.props.navigation.navigate('EditScreen');
   };
-  addHandler = (_itemKey) => {
+  addHandler = () => {
     this.setState({modalVisible: true});
-    console.log('ffffffffffffff' + this.state.modalVisible);
   };
 
   addModalHandler = () => {
@@ -88,12 +87,19 @@ class TodosScreen extends Component {
             <Button style={styles.addButton}
               title="Add"
               onPress={() => {
-                this.props.addTodos(
-                  this.state.add,
-                  boardKey,
-                );
-                this.setState({add: ''});
+
+                if(this.state.add===""){
+                  ToastAndroid.show("Empty task cannot be entered!", ToastAndroid.SHORT);
+                }
+                else{
+                  this.props.addTodos(
+                    this.state.add,
+                    boardKey,
+                  );
+                }
+                this.setState({title:''});
                 this.setState({modalVisible: false});
+               
               }}><Text>Add</Text></Button>
 
               <Button style={styles.closeButton} iconLeft light
@@ -103,7 +109,7 @@ class TodosScreen extends Component {
                 this.setState({modalVisible: false});
               }}>
              
-              <Text>X</Text>
+              <Text style={{fontSize:18,color:"#fff"}}>X</Text>
               </Button>
           </View>
         </View>
@@ -133,11 +139,19 @@ class TodosScreen extends Component {
             <Button style={styles.addButton}
               title="Edit this Todo"
               onPress={() => {
-                this.props.editTodos(
-                  this.state.empty,
-                  boardKey,
-                  this.state.itemKey,
-                );
+
+                if(this.state.empty===""){
+                  ToastAndroid.show("Empty task cannot be entered!", ToastAndroid.SHORT);
+                }
+                else{
+               
+                  this.props.editTodos(
+                    this.state.empty,
+                    boardKey,
+                    this.state.itemKey,
+                  );
+                }
+
                 this.setState({empty: ''});
                 this.setState({Visible: false});
               }}>   <Text>Edit</Text></Button>
@@ -149,7 +163,7 @@ class TodosScreen extends Component {
                 this.setState({Visible: false});
               }}>
              
-              <Text>X</Text>
+              <Text style={{fontSize:18,color:"#fff"}}>X</Text>
               </Button>
               
           </View>
@@ -171,10 +185,13 @@ class TodosScreen extends Component {
           renderItem={({item}) => {
             return (
               <View style={{flex: 1}}>
-              <ImageBackground source={image} style={styles.image}>
+              <ImageBackground  source={image}  style={ styles.image}
+              imageStyle={{ borderRadius: 25 }}>
               <TouchableOpacity  style={styles.card}>
               
-              <Text style={{fontSize:22 ,marginTop:20, marginBottom:20}} >{item.empty}</Text>
+              <Text style={{fontSize:20 ,marginTop:20, marginBottom:20,backgroundColor:"#DCEEF2",minWidth:200,textAlign:"center",borderRadius:10,opacity: 0.9,paddingRight:10,paddingLeft:10}}
+          
+          >{item.empty}</Text>
               <View  style={{flex: 1, flexDirection: 'row'}}>
              
                
@@ -199,9 +216,7 @@ class TodosScreen extends Component {
                 </Text>
 
                 </View>
-                <Text style={{fontSize:22}}
-                onPress={() => this.addHandler()}
-                ></Text>
+              
               </TouchableOpacity>
               </ImageBackground>
               </View>
@@ -215,15 +230,20 @@ class TodosScreen extends Component {
   };
 
   render() {
-    console.log('---------------------', this.props.todosList);
     const {boardKey} = this.props.route.params;
 
     return (
-     <Container >
-     <Text>Todos</Text>
+   
+
+    <View style={{flex:1}}>
+
+    <Container>
+    <ImageBackground source={bg} style={styles.backgroundImage} >
      <this.drawHandler />
+     <this.addModalHandler/>
+     <this.editModalHandler/>
         <Footer>
-          <FooterTab  style={{backgroundColor:"#FFB500"}}>
+          <FooterTab  style={{backgroundColor:"#133149"}}>
 
           <Button vertical
           onPress={() =>
@@ -233,8 +253,8 @@ class TodosScreen extends Component {
          }
           
           >
-          <Icon active name="navigate" />
-          <Text style={{color:"#000"}}>Todo</Text>
+          <Text style={{color:"#fff",fontSize:15}}>//</Text>
+          <Text style={{color:"#fff",fontSize:13,  fontWeight: 'bold'}}>Todo</Text>
 
         </Button>
            
@@ -245,8 +265,9 @@ class TodosScreen extends Component {
               })
             }
             >
-              <Icon name="camera" />
-              <Text style={{color:"#000"}}>Wip</Text>
+             
+            <Text style={{color:"#fff",fontSize:20, fontWeight: 'bold'}}>⋯</Text>
+              <Text style={{color:"#fff",fontSize:13,  fontWeight: 'bold'}}>Wip</Text>
 
             </Button>
 
@@ -257,8 +278,8 @@ class TodosScreen extends Component {
               })
             }
             >
-              <Icon name="apps" />
-           <Text style={{color:"#000"}}>Done</Text>
+          <Text style={{color:"#fff",fontSize:20,  fontWeight: 'bold'}}>	✓</Text>
+           <Text style={{color:"#fff",fontSize:13,  fontWeight: 'bold'}}>Done</Text>
 
             </Button>
            
@@ -269,13 +290,13 @@ class TodosScreen extends Component {
         <Fab icon="add"
         active={false}
         direction="right"
-        containerStyle={{ marginLeft: 10 }}
-        style={{ backgroundColor: '#FFB500' }}
+        containerStyle={{ marginLeft: 10,marginBottom:50}}
+        style={{ backgroundColor: '#FFA445' }}
         position="bottomRight"
         onPress={() => this.addHandler()}
         
     >
-      <Icon name="ios-search" />
+      <Icon name="add" />
         <Button style={{ backgroundColor: '#34A34F' }}>
             <Icon name="logo-whatsapp" />
         </Button>
@@ -286,9 +307,11 @@ class TodosScreen extends Component {
             <Icon name="ios-mail" />
         </Button>
     </Fab>
+    </ImageBackground>
+    </Container> 
+    </View>
+ 
 
-        
-      </Container>
     );
   }
 }
@@ -302,7 +325,6 @@ function mapStateToProps(state) {
       key: key,
     };
   });
-  console.log('%%%%%%%%%%%%%%%%%%%%', todosList);
 
   return {
     todosList,
