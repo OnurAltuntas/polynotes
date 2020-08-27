@@ -2,18 +2,20 @@
 # polynotes
 - You can visit from this link --> play store polynotes
 
-> This is multiplatform work organization mobile app like Trello.
+> This is multiplatform work organization react-native mobile app like Trello.
 
 > This app is synchronous with its desktop and web versions.
 
-> You can reach me from [a link]https://onuraltuntasdev.netlify.app/
+> You can reach me from https://onuraltuntasdev.netlify.app/
 
-> cloud firestore, react.js, redux, material-ui, bootstrap
-<img src="https://user-images.githubusercontent.com/53194850/91478853-41d7cc00-e8a9-11ea-8431-a939864c4330.jpg"
-data-canonical-src="https://user-images.githubusercontent.com/53194850/91478853-41d7cc00-e8a9-11ea-8431-a939864c4330.jpg" width="200" height="400" />
+> cloud firestore, react native , redux, nativebase
+
 
 <img src="https://user-images.githubusercontent.com/53194850/91478864-456b5300-e8a9-11ea-96f7-ef2b144d42fd.jpg"
 data-canonical-src="https://user-images.githubusercontent.com/53194850/91478864-456b5300-e8a9-11ea-96f7-ef2b144d42fd.jpg" width="200" height="400" />
+
+<img src="https://user-images.githubusercontent.com/53194850/91478853-41d7cc00-e8a9-11ea-8431-a939864c4330.jpg"
+data-canonical-src="https://user-images.githubusercontent.com/53194850/91478853-41d7cc00-e8a9-11ea-8431-a939864c4330.jpg" width="200" height="400" />
 
 <img src="https://user-images.githubusercontent.com/53194850/91478872-49977080-e8a9-11ea-9c42-225d4ba0f578.jpg"
 data-canonical-src="https://user-images.githubusercontent.com/53194850/91478872-49977080-e8a9-11ea-9c42-225d4ba0f578.jpg" width="200" height="400" />
